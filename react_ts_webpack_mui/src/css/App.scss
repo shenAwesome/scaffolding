@@ -1,0 +1,81 @@
+
+.mainMenu{
+    >a{
+        text-decoration: none;
+    }
+}
+
+.secondaryMenu{
+    >a{
+        text-decoration: none;
+    }
+}
+
+.imageDiv{
+    background-color: silver;
+    background-image: url('./img/test.jpeg');
+    background-size: cover;
+    width:200px;
+    height:200px;
+}
+
+.AppRoot{
+
+    &.phone{
+        >.header {
+            width: 100%;
+            z-index: 10;
+        }
+        >.left{
+            position: fixed;
+            z-index: 100;
+            >div{
+                min-height: 100vh;
+            }
+            &.close{
+                //display: none;
+                left:-100px; 
+            }
+            box-shadow:  0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)
+        }  
+        >.centre{
+            width:100%;
+        }
+    }
+    >.header{
+        //box-shadow: none;
+        position: fixed;
+    }
+
+    >.left{
+        position: fixed;
+        z-index: 100;
+        >div{
+            min-height: 100vh;
+        } 
+        &.open{
+            z-index: 1300;
+        }
+        box-shadow:  0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)
+    }  
+    
+    >.centre{
+
+    }
+
+    &.desktop,&.tablet{
+        display: block;
+    
+        &.drawerOpen{
+            >.centre{
+                margin-left: 240px;
+                width:calc(100% - 240px);
+            }
+        }
+        >.centre{
+            margin-left: 72px;
+            width:calc(100% - 72px);
+        }
+    }
+}
+

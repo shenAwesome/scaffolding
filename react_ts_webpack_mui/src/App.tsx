@@ -16,11 +16,12 @@ import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import { mainMenu, secondaryMenu } from './menu'
-import { Router, createHistory, LocationProvider } from "@reach/router"
+import { Router, createHistory, LocationProvider, Location } from "@reach/router"
 import createHashSource from 'hash-source'
 
 import { Home } from './page/Home'
 import { Dashboard } from './page/Dashboard'
+import './css/App.scss'
 
 const drawerWidth = 240
 
@@ -95,39 +96,58 @@ const styles = theme => ({
     }
 })
 
+
+var HomeTitle = () => (
+    <span>home</span>
+) as any
+
+var DashboardTitle = () => (
+    <span>dashboard</span>
+) as any
+
 class App extends React.Component {
     state = {
-        open: true,
+        device: 'desktop',
+        drawerOpen: true,
     }
 
     openDrawer = () => {
-        this.setState({ open: true })
+        this.setState({ drawerOpen: true })
     }
 
     closeDrawer = () => {
-        this.setState({ open: false })
+        this.setState({ drawerOpen: false })
     }
+
+    pathname = ''
 
     render() {
         return <LocationProvider history={history}>
             <CssBaseline />
+            <Location>{({ location }) => {
+                console.log(location)
+                this.pathname = location.pathname
+            }}</Location>
             {this.main()}
         </LocationProvider>
     }
 
     main() {
         const { classes } = this.props as any,
-            { open } = this.state
+            { drawerOpen, device } = this.state
 
-        return <div className={classes.root}>
-            <AppBar position="absolute" className={classNames('AppBar', classes.appBar, open && classes.appBarShift)} >
-                <Toolbar disableGutters={!open} className={classes.toolbar}>
+        return <div className={classNames('AppRoot', device, classes.root, { drawerOpen })} ref={this.root}>
+            <AppBar position="absolute" className={classNames('header', classes.appBar, drawerOpen && classes.appBarShift)} >
+                <Toolbar disableGutters={!drawerOpen} className={classes.toolbar}>
                     <IconButton color="inherit" aria-label="Open drawer" onClick={this.openDrawer}
-                        className={classNames(classes.menuButton, open && classes.menuButtonHidden)}  >
+                        className={classNames(classes.menuButton, drawerOpen && classes.menuButtonHidden)}  >
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="title" color="inherit" noWrap className={classes.title}>
-                        Todo
+                        <Router>
+                            <HomeTitle path="/" />
+                            <DashboardTitle path="Dashboard" />
+                        </Router>
                     </Typography>
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">
@@ -136,9 +156,9 @@ class App extends React.Component {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Drawer variant="permanent"
-                classes={{ paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose), }}
-                open={open}  >
+            <Drawer variant="permanent" className={classNames('left', { open: drawerOpen, close: !drawerOpen })}
+                classes={{ paper: classNames(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose), }}
+                open={drawerOpen}  >
                 <div className={classes.toolbarIcon}>
                     <IconButton onClick={this.closeDrawer}>
                         <ChevronLeftIcon />
@@ -149,7 +169,7 @@ class App extends React.Component {
                 <Divider />
                 <List>{secondaryMenu}</List>
             </Drawer>
-            <main className={classNames(classes.content, 'page')}>
+            <main className={classNames(classes.content, 'centre')} onMouseDown={this.onMouseDown}>
                 <div className={classes.appBarSpacer} />
                 <Router>
                     <Home path="/" />
@@ -157,6 +177,38 @@ class App extends React.Component {
                 </Router>
             </main>
         </div>
+    }
+
+    get isPhone() {
+        return this.state.device == 'phone'
+    }
+
+    onMouseDown = () => {
+        if (this.isPhone && this.state.drawerOpen) {
+            this.setState({ drawerOpen: false })
+        }
+    }
+
+    root = React.createRef<HTMLDivElement>()
+    checkDevice = () => {
+        let rect = this.root.current.getBoundingClientRect(),
+            { width, height } = rect,
+            length = width + height
+        let device = 'desktop'
+        if (width < 1100) device = 'tablet'
+        if (length < 1200) device = 'phone'
+        if (device != this.state.device) {
+            this.setState({ device })
+            if (device != 'desktop') this.setState({ drawerOpen: false })
+        }
+    }
+
+    componentDidUpdate() {
+        this.checkDevice()
+    }
+
+    componentDidMount() {
+        this.checkDevice()
     }
 }
 

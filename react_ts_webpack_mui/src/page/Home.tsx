@@ -15,10 +15,10 @@ class Main extends React.Component {
             { name: 'lastName' }
         ]
 
-
-        return <div>
-            Home page
+        return <div >
+            This is the HOME page so fast!!
             <DataGrid idProperty="id" dataSource={data} columns={columns} />
+            <div className='imageDiv' />
         </div>
     }
 }

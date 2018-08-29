@@ -10,8 +10,6 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 
 import { Router, Link } from "@reach/router"
 
-import './css/menu.scss'
-
 class Item {
     constructor(public path: string, public label: string, public icon: any) {
 
