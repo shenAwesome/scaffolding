@@ -19,7 +19,7 @@
     height:200px;
 }
 
-.AppRoot{
+.AppRoot{ 
 
     &.phone{
         >.header {
@@ -45,6 +45,11 @@
     >.header{
         //box-shadow: none;
         position: fixed;
+        >.progressbar{
+            position: absolute;
+            width:100%;
+            top:0;
+        }
     }
 
     >.left{

@@ -36,7 +36,6 @@ class Main extends React.Component<{
     render() {
         const { classes, total, cartName } = this.props
 
-
         return <div >
             <Paper elevation={1}>
                 <Typography variant="headline" component="h3">

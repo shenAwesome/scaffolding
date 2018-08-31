@@ -1,3 +1,4 @@
+import { effect, selector } from './classToModel'
 
 interface Product {
     name: string
@@ -9,7 +10,7 @@ interface Product {
 class Cart {
 
     //---------------------- state -----------------------
-    name = 'My nice cart'
+    _name = 'My nice cart'
     products = [] as Product[]
 
     //--------------------- pure functions (reducers)
@@ -26,17 +27,20 @@ class Cart {
      * add a product in 1 sec
      * @param prod 
      */
+    @effect
     async addAsync(prod: Product) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise(resolve => setTimeout(resolve, 5 * 1000))
         this.add(prod)
     }
 
     //--------------------- selectors -----------------------
-    get_name() {
-        return this.name
+    @selector
+    name() {
+        return this._name
     }
 
-    get_total() {
+    @selector
+    total() {
         return this.products.reduce((a, b) => a + (b.price * b.amount), 0)
     }
 }

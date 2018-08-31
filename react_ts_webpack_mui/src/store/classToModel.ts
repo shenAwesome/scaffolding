@@ -8,14 +8,15 @@ function classToModel(cls: any, modelName: string) {
 
     let fn_selector = [], fn_reducer = [], fn_effect = []
 
-    fns.forEach(f => {
-        let addTo = fn_reducer
-        if (f.indexOf('get_') == 0) {
+    fns.forEach(fnName => {
+        let fn = model[fnName],
+            addTo = fn_reducer
+        if (fn.isSelector) {
             addTo = fn_selector
-        } else if (f.endsWith('Async')) {
+        } else if (fn.isEffect) {
             addTo = fn_effect
         }
-        addTo.push(f)
+        addTo.push(fnName)
     })
     //console.log(model)
     //state
@@ -32,14 +33,14 @@ function classToModel(cls: any, modelName: string) {
         let fns = {}
         fn_effect.forEach(fn => {
             fns[fn] = function (payload, rootState?) {
-                (model[fn] as Function).call(dispatch[modelName], payload)
+                return (model[fn] as Function).call(dispatch[modelName], payload)
             }
         })
         return fns
     }
     //selector
     fn_selector.forEach(fn => {
-        selectors[fn.substring(4)] = function () {
+        selectors[fn] = function () {
             return (rootState, props) =>
                 (model[fn] as Function).call(rootState[modelName], props)
         }
@@ -57,4 +58,11 @@ function toModels(obj: any) {
     return models as any
 }
 
-export { classToModel, toModels }
+
+const effect = (target: any, key: string) => {
+    target[key].isEffect = true
+}
+const selector = (target: any, key: string) => {
+    target[key].isSelector = true
+}
+export { classToModel, toModels, effect, selector }

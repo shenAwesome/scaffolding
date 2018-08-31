@@ -18,11 +18,14 @@ import NotificationsIcon from '@material-ui/icons/Notifications'
 import { mainMenu, secondaryMenu } from './menu'
 import { Router, createHistory, LocationProvider, Location } from "@reach/router"
 import createHashSource from 'hash-source'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 
 import { Home } from './page/Home'
 import { Dashboard } from './page/Dashboard'
 import './css/App.scss'
+
+import { connect } from './store'
 
 const drawerWidth = 240
 
@@ -106,7 +109,14 @@ var DashboardTitle = () => (
     <span>dashboard</span>
 ) as any
 
-class App extends React.Component {
+const mapState = (state) => ({
+    loading: state.util.loading
+})
+@connect(mapState)
+class App extends React.Component<{
+    loading?: number
+    classes?: any
+}> {
     state = {
         device: 'desktop',
         drawerOpen: true,
@@ -120,7 +130,7 @@ class App extends React.Component {
         this.setState({ drawerOpen: false })
     }
 
-    onLocationChange(newLoc: string, oldLoc: string) { 
+    onLocationChange(newLoc: string, oldLoc: string) {
         if (this.isPhone && this.state.drawerOpen) {
             this.closeDrawer()
         }
@@ -142,11 +152,15 @@ class App extends React.Component {
     }
 
     main() {
-        const { classes } = this.props as any,
+        const { classes, loading } = this.props,
             { drawerOpen, device } = this.state
 
+        console.log('loading=' + loading)
+
         return <div className={classNames('AppRoot', device, classes.root, { drawerOpen })} ref={this.root}>
+
             <AppBar position="absolute" className={classNames('header', classes.appBar, drawerOpen && classes.appBarShift)} >
+                {(loading > 0) && <LinearProgress className='progressbar' />}
                 <Toolbar disableGutters={!drawerOpen} className={classes.toolbar}>
                     <IconButton color="inherit" aria-label="Open drawer" onClick={this.openDrawer}
                         className={classNames(classes.menuButton, drawerOpen && classes.menuButtonHidden)}  >
