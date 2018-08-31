@@ -19,6 +19,7 @@ import { mainMenu, secondaryMenu } from './menu'
 import { Router, createHistory, LocationProvider, Location } from "@reach/router"
 import createHashSource from 'hash-source'
 
+
 import { Home } from './page/Home'
 import { Dashboard } from './page/Dashboard'
 import './css/App.scss'
@@ -190,24 +191,19 @@ class App extends React.Component {
     }
 
     root = React.createRef<HTMLDivElement>()
+
     checkDevice = () => {
-        let rect = this.root.current.getBoundingClientRect(),
-            { width, height } = rect,
+        let width = window.innerWidth,
+            height = window.innerHeight,
             length = width + height
         let device = 'desktop'
         if (width < 1100) device = 'tablet'
         if (length < 1200) device = 'phone'
-        if (device != this.state.device) {
-            this.setState({ device })
-            if (device != 'desktop') this.setState({ drawerOpen: false })
-        }
+        this.setState({ device })
+        if (device != 'desktop') this.setState({ drawerOpen: false })
     }
 
-    componentDidUpdate() {
-        this.checkDevice()
-    }
-
-    componentDidMount() {
+    componentWillMount() {
         this.checkDevice()
     }
 }
