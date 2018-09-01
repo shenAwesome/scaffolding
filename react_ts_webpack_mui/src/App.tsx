@@ -114,7 +114,7 @@ const mapState = (state) => ({
 })
 @connect(mapState)
 class App extends React.Component<{
-    loading?: number
+    loading?: boolean
     classes?: any
 }> {
     state = {
@@ -160,7 +160,7 @@ class App extends React.Component<{
         return <div className={classNames('AppRoot', device, classes.root, { drawerOpen })} ref={this.root}>
 
             <AppBar position="absolute" className={classNames('header', classes.appBar, drawerOpen && classes.appBarShift)} >
-                {(loading > 0) && <LinearProgress className='progressbar' />}
+                {loading && <LinearProgress className='progressbar' />}
                 <Toolbar disableGutters={!drawerOpen} className={classes.toolbar}>
                     <IconButton color="inherit" aria-label="Open drawer" onClick={this.openDrawer}
                         className={classNames(classes.menuButton, drawerOpen && classes.menuButtonHidden)}  >

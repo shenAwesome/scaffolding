@@ -29,7 +29,7 @@ class Cart {
      */
     @effect
     async addAsync(prod: Product) {
-        await new Promise(resolve => setTimeout(resolve, 5 * 1000))
+        await new Promise(resolve => setTimeout(resolve, 1 * 1000))
         this.add(prod)
     }
 

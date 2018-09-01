@@ -4,17 +4,21 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { dispatch, select } from '../store'
+import { dispatch, select, connect } from '../store'
 
 
-@select(models => ({
-    cartName: models.cart.name,
-    total: models.cart.total
+@select(selector => ({
+    cartName: selector.cart.name,
+    total: selector.cart.total
+}))
+@connect(state => ({
+    name: state.cart._name
 }))
 class Main extends React.Component<{
     classes: any
     total: number
     cartName: string
+    name: string
 }>{
 
     add1 = () => {
@@ -35,6 +39,8 @@ class Main extends React.Component<{
 
     render() {
         const { classes, total, cartName } = this.props
+
+        console.log('name=' + this.props.name)
 
         return <div >
             <Paper elevation={1}>

@@ -15,12 +15,14 @@ const plugin = {
                 name: UtilPluginName,
                 reducers: {
                     changeLoading: (state, payload) => {
-                        const loading = state.loading + payload.change
-                        return { ...state, loading }
+                        const loadingCount = state.loadingCount + payload.change,
+                            loading = loadingCount > 0
+                        return { ...state, loading, loadingCount }
                     }
                 },
                 state: {
-                    loading: 0
+                    loadingCount: 0,
+                    loading: false
                 }
             }
         },
