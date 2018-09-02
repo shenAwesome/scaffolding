@@ -1,4 +1,4 @@
-import { effect, selector } from './classToModel'
+import { effect, selector } from './classToStore'
 
 interface Product {
     name: string
@@ -10,7 +10,7 @@ interface Product {
 class Cart {
 
     //---------------------- state -----------------------
-    _name = 'My nice cart'
+    name = 'My nice cart'
     products = [] as Product[]
 
     //--------------------- pure functions (reducers)
@@ -33,11 +33,7 @@ class Cart {
         this.add(prod)
     }
 
-    //--------------------- selectors -----------------------
-    @selector
-    name() {
-        return this._name
-    }
+    //--------------------- selectors ----------------------- 
 
     @selector
     total() {

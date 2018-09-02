@@ -4,20 +4,15 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { dispatch, select, connect } from '../store'
+import { dispatch, connect } from '../store'
 
 
-@select(selector => ({
-    cartName: selector.cart.name,
-    total: selector.cart.total
-}))
 @connect(state => ({
-    name: state.cart._name
+    name: state.cart.name
 }))
+
 class Main extends React.Component<{
     classes: any
-    total: number
-    cartName: string
     name: string
 }>{
 
@@ -38,14 +33,15 @@ class Main extends React.Component<{
     }
 
     render() {
-        const { classes, total, cartName } = this.props
-
-        console.log('name=' + this.props.name)
+        //const { classes, total, cartName } = this.props
+        const { classes, name } = this.props
+        const total = 1
+        //console.log('name=' + this.props.name)
 
         return <div >
             <Paper elevation={1}>
                 <Typography variant="headline" component="h3">
-                    {cartName} 's total is {total} !
+                    {name} 's total is {total} !
                 </Typography>
                 <Typography component="p">
                     Paper can be used to build surface or other elements for your application.

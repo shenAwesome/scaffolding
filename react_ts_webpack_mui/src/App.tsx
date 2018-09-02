@@ -110,7 +110,7 @@ var DashboardTitle = () => (
 ) as any
 
 const mapState = (state) => ({
-    loading: state.util.loading
+    loading: false //state.util.loading
 })
 @connect(mapState)
 class App extends React.Component<{
@@ -155,7 +155,7 @@ class App extends React.Component<{
         const { classes, loading } = this.props,
             { drawerOpen, device } = this.state
 
-        console.log('loading=' + loading)
+        //console.log('loading=' + loading)
 
         return <div className={classNames('AppRoot', device, classes.root, { drawerOpen })} ref={this.root}>
 

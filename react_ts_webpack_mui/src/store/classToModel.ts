@@ -46,7 +46,7 @@ function classToModel(cls: any, modelName: string) {
         }
     })
     const cfg = { state, reducers, effects, selectors }
-    console.log(cfg)
+    //console.log(cfg)
     return createModel(cfg) as any
 }
 

@@ -1,10 +1,6 @@
-import { init } from '@rematch/core'
-import selectPlugin from '@rematch/select'
-import loadingPlugin from '@rematch/loading'
-import { toModels } from './classToModel'
 import { Cart } from './Cart'
 import { connect as _connect } from 'react-redux'
-const connect: any = _connect //just to remove ts error
+import { ServiceStore } from './classToStore'
 
 //-------------------an utility plugin
 const UtilPluginName = 'util'
@@ -32,9 +28,9 @@ const plugin = {
             { dispatch } = this,
             self = dispatch[UtilPluginName]
         if (name == UtilPluginName) return
-        console.log(model)
+        //console.log(model)
         const actions = dispatch[name]
-        console.log(actions)
+        //console.log(actions)
         Object.keys(actions).forEach((actName: string) => {
             if (actions[actName].isEffect) {
                 let effect = actions[actName]
@@ -49,26 +45,14 @@ const plugin = {
     }
 }
 
-const store = init({
-    plugins: [
-        selectPlugin(),
-        plugin
-    ],
-    models: toModels({
-        cart: Cart
-    })
+const serviceStore = new ServiceStore({
+    cart: new Cart
 })
 
-interface Dispatch {
-    cart: Cart
-}
+serviceStore.dispatch.cart.add(null)
 
-const storeSelect = store.select,
-    dispatch: Dispatch = store.dispatch as any
+const { store, dispatch } = serviceStore
 
-const select = selector => function (target) {
-    return connect(storeSelect(selector))(target)
-} as any
+const connect: any = _connect //just to remove ts error
 
-
-export { store, dispatch, select, connect }
+export { serviceStore, store, dispatch, connect }
