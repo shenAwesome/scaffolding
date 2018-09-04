@@ -1,86 +1,94 @@
-
-.mainMenu{
-    >a{
+.mainMenu {
+    > a {
         text-decoration: none;
     }
 }
 
-.secondaryMenu{
-    >a{
+.secondaryMenu {
+    > a {
         text-decoration: none;
     }
 }
 
-.imageDiv{
+.imageDiv {
     background-color: silver;
-    background-image: url('./img/test.jpeg');
+    background-image: url("./img/test.jpeg");
     background-size: cover;
-    width:200px;
-    height:200px;
+    width: 20px;
+    height: 20px;
 }
 
-.AppRoot{ 
-
-    &.phone{
-        >.header {
+.AppRoot {
+    &.phone {
+        > .header {
             width: 100%;
             z-index: 10;
         }
-        >.left{
+
+        > .left {
             position: fixed;
             z-index: 100;
-            >div{
+
+            > div {
                 min-height: 100vh;
             }
-            &.close{
+
+            &.close {
                 //display: none;
-                left:-100px; 
+                left: -100px;
             }
-            box-shadow:  0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)
-        }  
-        >.centre{
-            width:100%;
+
+            box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        > .centre {
+            width: 100%;
         }
     }
-    >.header{
+
+    > .header {
         //box-shadow: none;
         position: fixed;
-        >.progressbar{
+
+        > .progressbar {
             position: absolute;
-            width:100%;
-            top:0;
+            width: 100%;
+            top: 0;
         }
     }
 
-    >.left{
+    > .left {
         position: fixed;
         z-index: 100;
-        >div{
+
+        > div {
             min-height: 100vh;
-        } 
-        &.open{
+        }
+
+        &.open {
             z-index: 1300;
         }
-        box-shadow:  0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0, 0, 0, 0.12)
-    }  
-    
-    >.centre{
+
+        box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    }
+
+    > .centre {
         display: block;
     }
 
-    &.desktop,&.tablet{
+    &.desktop, &.tablet {
         display: block;
-    
-        &.drawerOpen{
-            >.centre{
+
+        &.drawerOpen {
+            > .centre {
                 margin-left: 240px;
-                width:calc(100% - 240px);
+                width: calc(100% - 240px);
             }
         }
-        >.centre{
+
+        > .centre {
             margin-left: 72px;
-            width:calc(100% - 72px);
+            width: calc(100% - 72px);
         }
     }
 }
-

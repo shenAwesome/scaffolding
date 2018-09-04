@@ -1,5 +1,6 @@
 import produce from "immer"
 import { createStore, combineReducers } from 'redux'
+import { connect as reduxConnect } from 'react-redux'
 import * as _ from 'lodash'
 
 /**
@@ -11,8 +12,8 @@ const effect = (target: any, key: string) => {
 /**
  * decorator to tag a method as selector 
  */
-const selector = (target: any, key: string) => {
-    target[key].isSelector = true
+const calc = (target: any, key: string) => {
+    target[key].isCalc = true
 }
 
 /**
@@ -23,7 +24,7 @@ const selector = (target: any, key: string) => {
 class ServiceStore<T> {
     store: any
     dispatcher = {}
-    selector = {}
+    calc = {}
 
     constructor(private services: T) {
         this.initStore()
@@ -41,13 +42,13 @@ class ServiceStore<T> {
             const dispatch = {}
             this.dispatcher[serviceName] = dispatch
             //selectors
-            const selector = {}
-            this.selector[serviceName] = selector
+            const calcFields = {}
+            this.calc[serviceName] = calcFields
             //reducers 
             const serviceReducers = []
             _.forEach(Object.getPrototypeOf(service), (method, methodName) => {
-                if (method.isSelector) {
-                    selector[methodName] = function () {
+                if (method.isCalc) {
+                    calcFields[methodName] = function () {
                         return method.call(store.getState()[serviceName])
                     }
                 } else {
@@ -69,7 +70,6 @@ class ServiceStore<T> {
                         return ret
                     }
                     dispatch[methodName] = function (payload) {
-                        console.log('gogo=' + actionType)
                         store.dispatch({
                             type: actionType,
                             payload: payload
@@ -85,11 +85,10 @@ class ServiceStore<T> {
             }
         })
 
-        const { __REDUX_DEVTOOLS_EXTENSION__ } = window as any
-        let devExt = __REDUX_DEVTOOLS_EXTENSION__ && __REDUX_DEVTOOLS_EXTENSION__()
-        const store = createStore(combineReducers(reducers), devExt)
+        const { __REDUX_DEVTOOLS_EXTENSION__ } = window as any,
+            devExt = __REDUX_DEVTOOLS_EXTENSION__ && __REDUX_DEVTOOLS_EXTENSION__(),
+            store = createStore(combineReducers(reducers), devExt)
         this.store = store
-        console.log(this.store)
     }
 
     get dispatch(): T {
@@ -99,30 +98,23 @@ class ServiceStore<T> {
     get state(): T {
         return this.store.getState()
     }
+
+    get connect() {
+        const calc = this.calc as any
+        const connect = function (stateMap: ((state: T) => object), calcMap?: (calc: T) => object) {
+            return function (method) {
+                return reduxConnect((state: any) => {
+                    const map1 = stateMap(state),
+                        map2 = calcMap ? calcMap(calc) : null
+                    return {
+                        ...map1,
+                        ...map2
+                    }
+                })(method) as any
+            }
+        }
+        return connect
+    }
 }
 
-/*
-class Test {
-    score = 1
-
-    increase(scroe) {
-        this.score = this.score + scroe
-    }
-
-    @effect
-    async delayIncrease(score, state?) {
-        await new Promise(resolve => setTimeout(resolve, 1 * 1000))
-        this.increase(score)
-    }
-}
-
-let service = new ServiceStore({
-    test: new Test()
-})
-
-service.dispatch.test.increase(3)
-service.dispatch.test.delayIncrease(6) 
-console.log(service.state.test.score)
-*/
-
-export { ServiceStore, effect, selector }
+export { ServiceStore, effect, calc }

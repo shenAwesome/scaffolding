@@ -8,14 +8,12 @@ import { dispatch, connect } from '../store'
 
 
 @connect(state => ({
-    name: state.cart.name
+    name: state.cart.name,
+    count: state.cart.products.length
+}), calc => ({
+    total: calc.cart.total()
 }))
-
-class Main extends React.Component<{
-    classes: any
-    name: string
-}>{
-
+class Main extends React.Component {
     add1 = () => {
         dispatch.cart.add({
             name: 'test',
@@ -33,15 +31,12 @@ class Main extends React.Component<{
     }
 
     render() {
-        //const { classes, total, cartName } = this.props
-        const { classes, name } = this.props
-        const total = 1
-        //console.log('name=' + this.props.name)
+        const { classes, name, count, total } = this.props as any
 
         return <div >
             <Paper elevation={1}>
                 <Typography variant="headline" component="h3">
-                    {name} 's total is {total} !
+                    {name} 's total is {count}, totoal price is {total} !
                 </Typography>
                 <Typography component="p">
                     Paper can be used to build surface or other elements for your application.
