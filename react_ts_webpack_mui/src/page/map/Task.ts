@@ -46,6 +46,7 @@ function createTask<T1, T2>(context: T1, actions: T2): Task & T1 & T2 {
 
     const ctx = {
         start(fn: () => Promise<any>) {
+            console.log('ctx', ctx)
             fn.call(ctx).then(() => {
                 console.log('finish!')
                 //to call all action onfinish
@@ -66,18 +67,18 @@ function createTask<T1, T2>(context: T1, actions: T2): Task & T1 & T2 {
         ctx[actionId] = (payload: any) => {
             if (cancelled) {
                 throw 'TaskCancelled'
-            } else {
-                const action = actions[actionId]
-                if (action instanceof ComplexAction) {
-                    if (executedActions.indexOf(actionId) == -1) { //keep executed actions so they can clearn resource later
-                        executedActions.push(actionId)
-                    }
-                    return action.execute.call(ctx, payload)
-                } else {
-                    return action.call(ctx, payload)
-                }
-
             }
+            let ret = null
+            const action = actions[actionId]
+            if (action instanceof ComplexAction) {
+                if (executedActions.indexOf(actionId) == -1) { //keep executed actions so they can clearn resource later
+                    executedActions.push(actionId)
+                }
+                ret = action.execute.call(ctx, payload)
+            } else {
+                ret = action.call(ctx, payload)
+            }
+            return ret
         }
     })
 
@@ -88,14 +89,14 @@ class Mark extends ComplexAction<string> {
     execute(payload) {
         console.log('mark', payload)
         this['test'] = payload
-        console.log(this)
     }
 }
 
 const context = {
     map: 1
 }
-const actions = {
+
+const actions1 = {
     action1: payload => {
         return 1
     },
@@ -105,14 +106,21 @@ const actions = {
     mark: new Mark().fn
 }
 
+const actions2 = {
+    look: payload => 3
+}
+
+const actions = { ...actions1, ...actions2 }
+
 const task = createTask(context, actions)
 
 task.start(async () => {
     let v1 = task.action1(1)
+    console.log(v1)
     let v2 = task.action2(1)
+    console.log(v2)
     let v3 = task.mark('test')
-    console.log(v1, v2)
-    console.log(this)
+    console.log(task)
 })
 
 
