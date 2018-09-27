@@ -7,6 +7,9 @@ import HomeIcon from '@material-ui/icons/Home';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import MapIcon from '@material-ui/icons/Map';
+import * as classNames from 'classnames'
+
 
 import { Router, Link } from "@reach/router"
 
@@ -19,16 +22,20 @@ class Item {
 const items = [
     new Item('/', 'Home', HomeIcon),
     new Item('/Dashboard', 'Dashboard', DashboardIcon),
-    new Item('/Orders', 'Orders', ShoppingCartIcon)
+    new Item('/Orders', 'Orders', ShoppingCartIcon),
+    new Item('/Map1', 'Map1', MapIcon),
+    new Item('/Map2', 'Map2', MapIcon)
 ].map(item => {
-    return <Link to={item.path} key={item.path}>
-        <ListItem button className='ListItem'>
+    return <Link to={item.path} key={item.path} getProps={({ isCurrent }) => ({
+        className: classNames('ListItem', { selected: isCurrent })
+    })}>
+        <ListItem button  >
             <ListItemIcon>
                 <item.icon />
             </ListItemIcon>
             <ListItemText primary={item.label} />
         </ListItem>
-    </Link>
+    </Link >
 })
 
 const mainMenu = (

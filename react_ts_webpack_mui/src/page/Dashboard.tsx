@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography'
 class Main extends React.Component {
     render() {
         const { classes } = this.props as any
-        return <>
+        return <div className='Page'>
             <Typography variant="display1" gutterBottom>
                 Orders
                         </Typography>
@@ -22,7 +22,7 @@ class Main extends React.Component {
             <div className={classes.tableContainer}>
                 <SimpleTable />
             </div>
-        </>
+        </div>
     }
 }
 //set styles 

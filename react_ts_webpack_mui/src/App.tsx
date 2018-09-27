@@ -20,12 +20,22 @@ import { Router, createHistory, LocationProvider, Location } from "@reach/router
 import createHashSource from 'hash-source'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
+import './css/App.scss'
 
 import { Home } from './page/Home'
 import { Dashboard } from './page/Dashboard'
-import './css/App.scss'
+import { Map1 } from './page/Map1'
+import { Map2 } from './page/Map2'
+import { connect } from './store/service'
 
-import { connect } from './store'
+
+const createBody = () => <Router>
+    <Home path="/" />
+    <Dashboard path="Dashboard" />
+    <Map1 path='Map1' />
+    <Map2 path='Map2' />
+</Router>
+
 
 const drawerWidth = 240
 
@@ -155,6 +165,7 @@ class App extends React.Component<{
         const { classes, loading } = this.props,
             { drawerOpen, device } = this.state
 
+
         //console.log('loading=' + loading)
 
         return <div className={classNames('AppRoot', device, classes.root, { drawerOpen })} ref={this.root}>
@@ -194,10 +205,7 @@ class App extends React.Component<{
             </Drawer>
             <main className={classNames(classes.content, 'centre')} onMouseDown={this.onMouseDown}>
                 <div className={classes.appBarSpacer} />
-                <Router>
-                    <Home path="/" />
-                    <Dashboard path="Dashboard" />
-                </Router>
+                {createBody()}
             </main>
         </div>
     }
@@ -225,8 +233,15 @@ class App extends React.Component<{
         if (device != 'desktop') this.setState({ drawerOpen: false })
     }
 
-    componentWillMount() {
+    onResize = () => {
         this.checkDevice()
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.onResize)
+    }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onResize)
     }
 }
 

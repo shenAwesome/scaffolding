@@ -3,13 +3,15 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import App from './App'
 
-import { store } from './store'
-import { Provider } from 'react-redux'
+import { Provider } from './store/service'
 
-
+/*
 ReactDOM.render(
-    <Provider store={store}>
+    <Provider >
         <App />
     </Provider>,
     document.getElementById('root')
 )  
+*/
+
+import './page/map/Task'

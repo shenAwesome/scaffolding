@@ -1,7 +1,8 @@
 import produce from "immer"
 import { createStore, combineReducers } from 'redux'
-import { connect as reduxConnect } from 'react-redux'
+import { connect as reduxConnect, Provider } from 'react-redux'
 import * as _ from 'lodash'
+import * as React from 'react'
 
 /**
  * decorator to tag a method as effect 
@@ -17,20 +18,25 @@ const calc = (target: any, key: string) => {
 }
 
 /**
+ * yarn add react-redux immer lodash redux
+ * yarn add @types/react-redux @types/lodash @types/redux --dev
  * convert class to redux state & action
  * @param cls 
  * @param modelName 
  */
 class ServiceStore<T> {
-    store: any
-    dispatcher = {}
-    calc = {}
+    /**
+     * the redux store instance
+     */
+    public store: any
+    private dispatcher = {}
+    private calcFields = {}
 
     constructor(private services: T) {
         this.initStore()
     }
 
-    initStore() {
+    private initStore() {
         const reducers = {}
         _.forEach(this.services as any, (service, serviceName) => {
             //states
@@ -43,7 +49,7 @@ class ServiceStore<T> {
             this.dispatcher[serviceName] = dispatch
             //selectors
             const calcFields = {}
-            this.calc[serviceName] = calcFields
+            this.calcFields[serviceName] = calcFields
             //reducers 
             const serviceReducers = []
             _.forEach(Object.getPrototypeOf(service), (method, methodName) => {
@@ -91,29 +97,54 @@ class ServiceStore<T> {
         this.store = store
     }
 
+    /**
+     * root dispatcher
+     */
     get dispatch(): T {
         return this.dispatcher as any
     }
 
+    /**
+     * root state
+     */
     get state(): T {
         return this.store.getState()
     }
 
+    /**
+     * root calc dictionary which contains all calculated fields
+     */
+    get calc(): T {
+        return this.calcFields as any
+    }
+
+    /**
+    * connect decorator to use with React.Component.
+    * it maps state (or calcudated fields) to component props
+    */
     get connect() {
-        const calc = this.calc as any
-        const connect = function (stateMap: ((state: T) => object), calcMap?: (calc: T) => object) {
+        const { calc } = this
+        const connect = function (stateMap: ((state: T) => object),
+            calcMap?: (calc: T) => object) {
             return function (method) {
                 return reduxConnect((state: any) => {
                     const map1 = stateMap(state),
                         map2 = calcMap ? calcMap(calc) : null
-                    return {
-                        ...map1,
-                        ...map2
-                    }
+                    return { ...map1, ...map2 }
                 })(method) as any
             }
         }
         return connect
+    }
+
+    /**
+     * the service provider
+     */
+    get Provider() {
+        const { store } = this
+        return (props) => {
+            return React.createElement(Provider, { store }, props.children)
+        }
     }
 }
 

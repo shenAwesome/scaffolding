@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { dispatch, connect } from '../store'
+import { dispatch, connect } from '../store/service'
 
 
 @connect(state => ({
@@ -33,7 +33,7 @@ class Main extends React.Component {
     render() {
         const { classes, name, count, total } = this.props as any
 
-        return <div >
+        return <div className='Page'>
             <Paper elevation={1}>
                 <Typography variant="headline" component="h3">
                     {name} 's total is {count}, totoal price is {total} !

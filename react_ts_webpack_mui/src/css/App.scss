@@ -74,6 +74,7 @@
 
     > .centre {
         display: block;
+        padding: 0;
     }
 
     &.desktop, &.tablet {
@@ -89,6 +90,35 @@
         > .centre {
             margin-left: 72px;
             width: calc(100% - 72px);
+        }
+    }
+
+    .Page {
+        padding: 1rem;
+    }
+
+    .FillSpacePage {
+        padding: 0;
+        height: calc( 100vh - 56px);
+    }
+
+    .mapDiv {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.ListItem {
+    &.selected > div {
+        background-color: rgba(0, 0, 0, 0.14);
+    }
+}
+
+@media (min-width: 600px) {
+    .AppRoot {
+        .FillSpacePage {
+            padding: 0;
+            height: calc( 100vh - 64px);
         }
     }
 }

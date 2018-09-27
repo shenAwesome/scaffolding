@@ -1,4 +1,4 @@
-import { effect, calc } from './classToStore'
+import { effect, calc } from './ServiceStore'
 
 interface Product {
     name: string
