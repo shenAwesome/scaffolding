@@ -1,7 +1,7 @@
 import * as React from 'react'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-import { MapWidget } from './map/MapWidget'
+import { MapWidget } from './util/MapWidget'
 
 
 class Main extends React.Component {
