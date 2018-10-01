@@ -76,17 +76,18 @@ class Flow<T extends Actions = any> extends Action {
             flowActions = this.createFlowActions(),
             p = main.call(context, flowActions) as Promise<any>
 
-        const cleanup = () => {
+        const onExecuted = () => {
             this.executed.forEach(a => {
                 a.onFlowFinish()
             })
+            this.onExecuted()
         }
 
         return p.then(ret => {
-            cleanup()
+            onExecuted()
             return ret
         }).catch(reason => {
-            cleanup()
+            onExecuted()
             throw reason
         })
     }

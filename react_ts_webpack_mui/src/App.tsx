@@ -19,6 +19,11 @@ import { mainMenu, secondaryMenu } from './menu'
 import { Router, createHistory, LocationProvider, Location } from "@reach/router"
 import createHashSource from 'hash-source'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Button from '@material-ui/core/Button';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import SearchIcon from '@material-ui/icons/Search';
+import Input from '@material-ui/core/Input';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 import './css/App.scss'
 
@@ -27,6 +32,7 @@ import { Dashboard } from './page/Dashboard'
 import { Map1 } from './page/Map1'
 import { Map2 } from './page/Map2'
 import { connect } from './store/service'
+import * as $ from "jquery";
 
 
 const createBody = () => <Router>
@@ -107,7 +113,50 @@ const styles = theme => ({
         padding: theme.spacing.unit * 3,
         minHeight: '100vh',
         overflow: 'visible',
-    }
+    },
+
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing.unit * 2,
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing.unit * 3,
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        width: theme.spacing.unit * 9,
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+        width: '100%',
+    },
+    inputInput: {
+        paddingTop: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 10,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: 120,
+            '&:focus': {
+                width: 200,
+            },
+        },
+    },
 })
 
 
@@ -169,7 +218,7 @@ class App extends React.Component<{
         //console.log('loading=' + loading)
 
         return <div className={classNames('AppRoot', device, classes.root, { drawerOpen })} ref={this.root}>
-
+            {/* ---------the top bar  -----------*/}
             <AppBar position="absolute" className={classNames('header', classes.appBar, drawerOpen && classes.appBarShift)} >
                 {loading && <LinearProgress className='progressbar' />}
                 <Toolbar disableGutters={!drawerOpen} className={classes.toolbar}>
@@ -183,6 +232,21 @@ class App extends React.Component<{
                             <DashboardTitle path="Dashboard" />
                         </Router>
                     </Typography>
+
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <Input
+                            placeholder="Search…"
+                            disableUnderline
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                        />
+                    </div>
+                    <Button color="inherit">Login</Button>
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">
                             <NotificationsIcon />
@@ -190,6 +254,7 @@ class App extends React.Component<{
                     </IconButton>
                 </Toolbar>
             </AppBar>
+            {/* ---------the left menu -----------*/}
             <Drawer variant="permanent" className={classNames('left', { open: drawerOpen, close: !drawerOpen })}
                 classes={{ paper: classNames(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose), }}
                 open={drawerOpen}  >
@@ -203,6 +268,7 @@ class App extends React.Component<{
                 <Divider />
                 <List>{secondaryMenu}</List>
             </Drawer>
+            {/* --------- main body -----------*/}
             <main className={classNames(classes.content, 'centre')} onMouseDown={this.onMouseDown}>
                 <div className={classes.appBarSpacer} />
                 {createBody()}
@@ -231,6 +297,7 @@ class App extends React.Component<{
         if (length < 1200) device = 'phone'
         this.setState({ device })
         if (device != 'desktop') this.setState({ drawerOpen: false })
+        console.log('check device')
     }
 
     onResize = () => {
@@ -239,6 +306,10 @@ class App extends React.Component<{
 
     componentDidMount() {
         window.addEventListener('resize', this.onResize)
+        setTimeout(() => {
+            $(window).trigger('resize')
+        }, 200);
+
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.onResize)

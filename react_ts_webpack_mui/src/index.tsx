@@ -5,13 +5,12 @@ import App from './App'
 
 import { Provider } from './store/service'
 
-/*
+
 ReactDOM.render(
     <Provider >
         <App />
     </Provider>,
     document.getElementById('root')
-)  
-*/
+)
 
-import './page/util/UIFlow'
+//import './page/util/UIFlow'

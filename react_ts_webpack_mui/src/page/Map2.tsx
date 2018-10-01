@@ -49,17 +49,31 @@ function initMap(target) {
 }
 class Main extends React.Component {
     render() {
-        return <div className='FillSpacePage'>
+        const { classes } = this.props as any
+        return <div className={classes.full}>
             <MapWidget id='map2' initMap={initMap} />
         </div>
     }
 }
 
 //set styles 
-const Map2 = withStyles((theme => ({
-    button: {
-        margin: theme.spacing.unit,
+//set styles 
+const Map2 = withStyles((theme => {
+    console.log(theme.mixins.toolbar)
+    return {
+        button: {
+            margin: theme.spacing.unit,
+        },
+        full: {
+            height: 'calc(100vh - 56px)',
+            [`${theme.breakpoints.up('xs')} and (orientation: landscape)`]: {
+                height: 'calc(100vh - 48px)'
+            },
+            [theme.breakpoints.up('sm')]: {
+                height: 'calc(100vh - 64px)'
+            }
+        }
     }
-})) as any)(Main) as any
+}) as any)(Main) as any
 
 export { Map2 }
